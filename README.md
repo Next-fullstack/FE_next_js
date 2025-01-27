@@ -4,7 +4,7 @@
 
 1. **Clone the repository**
     ```bash
-    git clone [<repository-url>](https://github.com/qibal/todo_list_nextjs_typescript_prisma_postgres.git)
+    git clone https://github.com/qibal/todo_list_nextjs_typescript_prisma_postgres.git
     cd todo_list_nextjs_typescript_prisma_postgres
     ```
 
