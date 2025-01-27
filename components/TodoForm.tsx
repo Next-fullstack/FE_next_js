@@ -90,7 +90,7 @@ export default function TodoForm({ params }: TodoFormProps) {
         <div className="w-full">
             <div className="mb-4">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className=" flex flex-row border gap-x-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className=" flex flex-row gap-x-4">
                         <FormField
                             control={form.control}
                             name="todo"
