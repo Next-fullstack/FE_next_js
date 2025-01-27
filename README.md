@@ -4,8 +4,8 @@
 
 1. **Clone the repository**
     ```bash
-    git clone <repository-url>
-    cd <project-directory>
+    git clone [<repository-url>](https://github.com/qibal/todo_list_nextjs_typescript_prisma_postgres.git)
+    cd todo_list_nextjs_typescript_prisma_postgres
     ```
 
 2. **Install dependencies**
