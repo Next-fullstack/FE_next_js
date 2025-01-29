@@ -8,6 +8,9 @@ export function middleware(request: NextRequest) {
     if (!token && request.nextUrl.pathname === '/') {
         return NextResponse.redirect(new URL('/login', request.url))
     }
+    if (!token && request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/register') {
+        return NextResponse.next()
+    }
 
     // Redirect to home if accessing auth routes with token
     if (token && request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/register') {
