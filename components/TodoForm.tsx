@@ -14,7 +14,6 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form"
-import { deleteTodos, insertTodos, updateTodos } from "@/app/Actions/Todo"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 interface Todo {
@@ -48,8 +47,19 @@ export default function TodoForm({ params }: TodoFormProps) {
     async function onSubmit(todo: z.infer<typeof formSchema>) {
         console.log("🚀 ~ onSubmit ~ values:", todo)
         try {
-            const result = await insertTodos(todo)
-            if (result) {
+            const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/todos`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    todo: todo.todo,
+                    done: false
+                })
+            })
+            const todos: Todo[] = await result.json()
+
+            if (todos) {
                 form.reset()
                 router.refresh();
             }
@@ -59,11 +69,19 @@ export default function TodoForm({ params }: TodoFormProps) {
         }
     }
     async function handleTodo(id: string) {
+        console.log("🚀 ~ TodoForm ~ id:", id)
         try {
 
-            const result = await updateTodos(id);
+            const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/todos/update/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            // const todos: Todo[] = await result.json()
+
             if (result) {
-                // Refresh server data
+                form.reset()
                 router.refresh();
             }
         } catch (error) {
@@ -74,9 +92,14 @@ export default function TodoForm({ params }: TodoFormProps) {
     async function handleDelete(id: string) {
         try {
             setDeletingId(id);
-            const result = await deleteTodos(id);
+            const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/todos/delete/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
             if (result) {
-                // Refresh server data
+                form.reset()
                 router.refresh();
             }
         } catch (error) {
