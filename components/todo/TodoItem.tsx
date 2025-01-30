@@ -24,6 +24,9 @@ const TodoItem = ({
   newName,
   setNewName,
 }: TodoItemProps) => {
+  const todoName = todo.todo || ''; // Fallback to an empty string if todo.todo is null or undefined
+  const editableName = newName || ''; // Fallback to an empty string if newName is null or undefined
+
   return (
     <li
       key={todo.id}
@@ -39,15 +42,15 @@ const TodoItem = ({
         {editingId === todo.id ? (
           <input
             type="text"
-            value={newName}
+            value={editableName}
             onChange={(e) => setNewName(e.target.value)}
-            onBlur={() => changeName(todo.id, newName)}
+            onBlur={() => changeName(todo.id, editableName)}
             autoFocus
             className="text-lg p-2 bg-gray-200 rounded-md border-none"
           />
         ) : (
           <span className={`text-lg ${todo.done ? "line-through text-gray-500" : "text-gray-800"}`}>
-            {todo.todo}
+            {todoName}
           </span>
         )}
       </div>
@@ -61,7 +64,7 @@ const TodoItem = ({
           <FaPencilAlt
             onClick={() => {
               setEditingId(todo.id)
-              setNewName(todo.todo)
+              setNewName(todo.todo || '') // Fallback if todo.todo is null or undefined
             }}
             className="text-blue-500 cursor-pointer hover:text-blue-600"
           />
@@ -74,5 +77,6 @@ const TodoItem = ({
     </li>
   )
 }
+
 
 export default TodoItem

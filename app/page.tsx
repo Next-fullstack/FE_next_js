@@ -42,6 +42,11 @@ export default function TodoList() {
 
   // Function to add a task
   const addTodo = async (newTodo: Todo) => {
+    if (!newTodo.todo.trim()) {
+      alert("Please enter a valid task name.");
+      return; // Don't proceed if the task name is empty or invalid
+    }
+
     try {
       const createdTodo = await api.createTodo(newTodo)
       setTodos((prevTodos) => [...prevTodos, createdTodo])
@@ -80,6 +85,11 @@ export default function TodoList() {
 
   // Function to change the name of a task
   const changeName = async (id: string, newName: string) => {
+    if (!newName.trim()) {
+      alert("Task name cannot be empty.");
+      return;
+    }
+
     try {
       await api.updateTodo(id, { todo: newName }) // Update task name via API
       setTodos((prevTodos) =>
@@ -145,8 +155,7 @@ export default function TodoList() {
                     )}
                     {/* Priority Color Dot */}
                     <span
-                      className={`w-3 h-3 rounded-full ml-2 ${todo.priority === "low" ? "bg-green-500" : todo.priority === "medium" ? "bg-yellow-500" : "bg-red-500"}`}
-                    ></span>
+                      className={`w-3 h-3 rounded-full ml-2 ${todo.priority === "low" ? "bg-green-500" : todo.priority === "medium" ? "bg-yellow-500" : "bg-red-500"}`}></span>
                   </div>
 
                   <div className="flex items-center gap-x-3">
