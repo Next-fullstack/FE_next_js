@@ -83,7 +83,7 @@ export const api = {
     return Array.isArray(data) ? data : [];
   },
 
-  createTodo: async (todo: { name: string; priority: string }) => {
+  createTodo: async (todo: { todo: string; priority: string;done:boolean }) => {
     console.log("🚀 ~ createTodo: ~ todo:", todo);
     const token = getAuthToken();
     const response = await fetch(`${BASE_URL}/api/todos`, {
@@ -93,8 +93,9 @@ export const api = {
         "Authorization": token ? `Bearer ${token}` : "",
       },
       body: JSON.stringify({
-        todo: todo.name,
-        priority: todo.priority,
+        todo: todo.todo,
+        done: todo.done,
+        priority: todo.priority
       }),
     });
 

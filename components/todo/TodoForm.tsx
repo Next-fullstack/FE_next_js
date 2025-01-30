@@ -21,13 +21,15 @@ export default function TodoForm({ addTodo }: TodoFormProps) {
   const [todoText, setTodoText] = useState("")
 
   const onSubmit = (data: { todo: string }) => {
+    console.log("🚀 ~ onSubmit ~ data:", data)
     if (data.todo.trim() !== "") {
       const newTodo = {
-        id: Math.random().toString(36).substring(7),
+        // id: Math.random().toString(36).substring(7),
         todo: data.todo,
         done: false,
         priority: "low", // Default priority
       }
+      console.log("🚀 ~ onSubmit ~ newTodo:", newTodo)
       addTodo(newTodo)
       setTodoText("") // Clear input field after submit
       reset() // Reset form values

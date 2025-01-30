@@ -18,7 +18,6 @@ export default function TodoList() {
   // State for managing tasks
   const [todos, setTodos] = useState<Todo[]>([])
   const [loading, setLoading] = useState<boolean>(false)
-
   // State to manage edit mode for task names
   const [editingId, setEditingId] = useState<string | null>(null)
   const [newName, setNewName] = useState<string>("")
@@ -49,7 +48,9 @@ export default function TodoList() {
 
     try {
       const createdTodo = await api.createTodo(newTodo)
-      setTodos((prevTodos) => [...prevTodos, createdTodo])
+      console.log("🚀 ~ addTodo ~ createdTodo:", createdTodo)
+      fetchTodos()
+      // setTodos((prevTodos) => [...prevTodos, createdTodo])
     } catch (error) {
       console.error("Failed to add todo:", error)
     }
