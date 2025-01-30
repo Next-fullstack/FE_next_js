@@ -1,72 +1,111 @@
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+
+// Helper function to get the token from localStorage (or context if you prefer)
+const getAuthToken = () => {
+  return localStorage.getItem('token'); // or use AuthContext if you're using React context for storing the token
+};
+
+// Handle API responses
+const handleResponse = async (response: Response) => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  const text = await response.text(); // Get raw response text
+  return text ? JSON.parse(text) : null; // Parse JSON only if not empty
+};
+
 export const api = {
+  // Auth API calls
+  register: async (username: string, password: string) => {
+    const response = await fetch(`${BASE_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+    return handleResponse(response);
+  },
+
+  login: async (username: string, password: string) => {
+    const response = await fetch(`${BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+    return handleResponse(response);
+  },
+
+  // Todo API calls
   getTodos: async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/todos`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch todos');
-    }
-    return response.json();
+    const token = getAuthToken();
+    const response = await fetch(`${BASE_URL}/api/todos`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token ? `Bearer ${token}` : "", // Include token if available
+      },
+    });
+    return handleResponse(response);
   },
 
-  createTodo: async (todo: { todo: string }) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/todos`, {
-      method: 'POST',
+  createTodo: async (todo: { name: string; priority?: string }) => {
+    const token = getAuthToken();
+    const response = await fetch(`${BASE_URL}/api/todos`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
+        "Authorization": token ? `Bearer ${token}` : "", // Include token if available
       },
-      body: JSON.stringify({ todo, done: false })
+      body: JSON.stringify(todo),
     });
-
-    if (!response.ok) {
-      throw new Error('Failed to create todo');
-    }
-
-    return response.json();
+    return handleResponse(response);
   },
 
-  updateTodo: async (id: string, todo: { todo: string }) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/todos/${id}`, {
-      method: 'PUT',
+  updateTodo: async (id: string, todo: { name: string }) => {
+    const token = getAuthToken();
+    const response = await fetch(`${BASE_URL}/api/todos/${id}`, {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
+        "Authorization": token ? `Bearer ${token}` : "", // Include token if available
       },
-      body: JSON.stringify(todo)
+      body: JSON.stringify(todo),
     });
-
-    if (!response.ok) {
-      throw new Error('Failed to update todo');
-    }
-
-    return response.json();
+    return handleResponse(response);
   },
 
   deleteTodo: async (id: string) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/todos/${id}`, {
-      method: 'DELETE',
+    const token = getAuthToken();
+    const response = await fetch(`${BASE_URL}/api/todos/${id}`, {
+      method: "DELETE",
       headers: {
-        'Content-Type': 'application/json',
-      }
+        "Content-Type": "application/json",
+        "Authorization": token ? `Bearer ${token}` : "", // Include token if available
+      },
     });
+    return handleResponse(response);
+  },
 
-    if (!response.ok) {
-      throw new Error('Failed to delete todo');
-    }
-
-    return response.json();
+  toggleTodoStatus: async (id: string) => {
+    const token = getAuthToken();
+    const response = await fetch(`${BASE_URL}/api/todos/${id}/status`, {
+      method: "PUT",
+      headers: {
+        "Authorization": token ? `Bearer ${token}` : "", // Include token if available
+      },
+    });
+    return handleResponse(response);
   },
 
   updatePriority: async (id: string, priority: string) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/todos/${id}/priority`, {
-      method: 'PUT',
+    const token = getAuthToken();
+    const response = await fetch(`${BASE_URL}/api/todos/${id}/priority`, {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
+        "Authorization": token ? `Bearer ${token}` : "", // Include token if available
       },
-      body: JSON.stringify({ priority })
+      body: JSON.stringify({ priority }),
     });
-
-    if (!response.ok) {
-      throw new Error('Failed to update priority');
-    }
-
-    return response.json();
+    return handleResponse(response);
   },
 };

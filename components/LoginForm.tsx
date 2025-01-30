@@ -62,15 +62,32 @@ export default function LoginForm() {
                 throw new Error(`Invalid response type: ${contentType}`)
             }
 
+            // Handle empty response body
+            if (result.status === 204) {  // No content
+                throw new Error('No response content received.')
+            }
+
             if (!result.ok) {
                 const errorData = await result.json();
                 console.error('Login failed:', errorData);
                 return;
             }
 
-            const responseData = await result.json();
-            document.cookie = `token=${responseData.token}; path=/; expires=${new Date(Date.now() + responseData.expiresIn).toUTCString()}; SameSite=Strict`;
-            window.location.href = '/';
+            // Safely parse the JSON response
+            let responseData = null;
+            try {
+                responseData = await result.json();
+            } catch (parseError) {
+                console.error('Failed to parse JSON response:', parseError);
+                return;
+            }
+
+            if (responseData?.token) {
+                document.cookie = `token=${responseData.token}; path=/; expires=${new Date(Date.now() + responseData.expiresIn).toUTCString()}; SameSite=Strict`;
+                window.location.href = '/';
+            } else {
+                console.error('Invalid token received:', responseData);
+            }
 
         } catch (error) {
             console.error('Login error:', error)
@@ -78,6 +95,7 @@ export default function LoginForm() {
             setIsLoading(false)
         }
     }
+
 
     return (
 

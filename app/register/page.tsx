@@ -1,13 +1,13 @@
 
 
-import RegisterForm from "@/components/RegistetForm"
+import RegisterForm from "@/components/RegisterForm"
 import Image from "next/image"
 import Link from "next/link"
 
 export default function LoginPage() {
 
     return (
-        <div className="flex min-h-screen flex-col md:flex-row ">
+        <div className="fl  ex min-h-screen flex-col md:flex-row ">
             {/* Left Column - Login Form */}
             <div className="flex min-h-screen w-full items-center justify-center px-4 py-8 md:w-1/2 md:px-8 lg:px-12 xl:px-16">
                 <div className="w-full max-w-md space-y-6">
